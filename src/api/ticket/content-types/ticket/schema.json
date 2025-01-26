@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tickets",
+  "info": {
+    "singularName": "ticket",
+    "pluralName": "tickets",
+    "displayName": "Ticket"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "price": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::price.price"
+    },
+    "exposition": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::exposition.exposition"
+    },
+    "commande": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::commande.commande",
+      "inversedBy": "tickets"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "commandes",
+  "info": {
+    "singularName": "commande",
+    "pluralName": "commandes",
+    "displayName": "Commande"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "total_price": {
+      "type": "decimal"
+    },
+    "order_date": {
+      "type": "date"
+    },
+    "etat": {
+      "type": "string"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "commandes"
+    },
+    "tickets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::ticket.ticket",
+      "mappedBy": "commande"
+    }
+  }
+}

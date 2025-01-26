@@ -369,6 +369,236 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiArtistArtist extends Struct.CollectionTypeSchema {
+  collectionName: 'artists';
+  info: {
+    description: '';
+    displayName: 'Artist';
+    pluralName: 'artists';
+    singularName: 'artist';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    birthday: Schema.Attribute.Date;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    death_date: Schema.Attribute.Date;
+    lastname: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::artist.artist'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    oeuvres: Schema.Attribute.Relation<'oneToMany', 'api::oeuvre.oeuvre'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiCommandeCommande extends Struct.CollectionTypeSchema {
+  collectionName: 'commandes';
+  info: {
+    displayName: 'Commande';
+    pluralName: 'commandes';
+    singularName: 'commande';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    etat: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::commande.commande'
+    > &
+      Schema.Attribute.Private;
+    order_date: Schema.Attribute.Date;
+    publishedAt: Schema.Attribute.DateTime;
+    tickets: Schema.Attribute.Relation<'oneToMany', 'api::ticket.ticket'>;
+    total_price: Schema.Attribute.Decimal;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiExpositionExposition extends Struct.CollectionTypeSchema {
+  collectionName: 'expositions';
+  info: {
+    displayName: 'Exposition';
+    pluralName: 'expositions';
+    singularName: 'exposition';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    departure_date: Schema.Attribute.Date;
+    description: Schema.Attribute.RichText;
+    end_date: Schema.Attribute.Date;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::exposition.exposition'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    oeuvres: Schema.Attribute.Relation<'oneToMany', 'api::oeuvre.oeuvre'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiHoraireHoraire extends Struct.CollectionTypeSchema {
+  collectionName: 'horaires';
+  info: {
+    description: '';
+    displayName: 'Horaire';
+    pluralName: 'horaires';
+    singularName: 'horaire';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    closing_time: Schema.Attribute.Time;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    day_of_week: Schema.Attribute.Enumeration<
+      ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::horaire.horaire'
+    > &
+      Schema.Attribute.Private;
+    opening_time: Schema.Attribute.Time;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiOeuvreOeuvre extends Struct.CollectionTypeSchema {
+  collectionName: 'oeuvres';
+  info: {
+    description: '';
+    displayName: 'Oeuvre';
+    pluralName: 'oeuvres';
+    singularName: 'oeuvre';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    artist: Schema.Attribute.Relation<'manyToOne', 'api::artist.artist'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Blocks;
+    exposition: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::exposition.exposition'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::oeuvre.oeuvre'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String;
+    type: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    year: Schema.Attribute.Date;
+  };
+}
+
+export interface ApiPricePrice extends Struct.CollectionTypeSchema {
+  collectionName: 'prices';
+  info: {
+    description: '';
+    displayName: 'price';
+    pluralName: 'prices';
+    singularName: 'price';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::price.price'> &
+      Schema.Attribute.Private;
+    price: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
+    tickets_type: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTicketTicket extends Struct.CollectionTypeSchema {
+  collectionName: 'tickets';
+  info: {
+    displayName: 'Ticket';
+    pluralName: 'tickets';
+    singularName: 'ticket';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    commande: Schema.Attribute.Relation<'manyToOne', 'api::commande.commande'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    exposition: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::exposition.exposition'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::ticket.ticket'
+    > &
+      Schema.Attribute.Private;
+    price: Schema.Attribute.Relation<'oneToOne', 'api::price.price'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -824,10 +1054,11 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
+    birthday: Schema.Attribute.Date;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    commandes: Schema.Attribute.Relation<'oneToMany', 'api::commande.commande'>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
@@ -878,6 +1109,13 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::artist.artist': ApiArtistArtist;
+      'api::commande.commande': ApiCommandeCommande;
+      'api::exposition.exposition': ApiExpositionExposition;
+      'api::horaire.horaire': ApiHoraireHoraire;
+      'api::oeuvre.oeuvre': ApiOeuvreOeuvre;
+      'api::price.price': ApiPricePrice;
+      'api::ticket.ticket': ApiTicketTicket;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
