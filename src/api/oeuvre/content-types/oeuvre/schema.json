@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "oeuvres",
+  "info": {
+    "singularName": "oeuvre",
+    "pluralName": "oeuvres",
+    "displayName": "Oeuvre",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "year": {
+      "type": "date"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "artist": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::artist.artist",
+      "inversedBy": "oeuvres"
+    },
+    "exposition": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::exposition.exposition",
+      "inversedBy": "oeuvres"
+    },
+    "type": {
+      "type": "string"
+    }
+  }
+}
