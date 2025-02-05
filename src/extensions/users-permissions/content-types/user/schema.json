@@ -73,6 +73,12 @@
       "relation": "oneToMany",
       "target": "api::commande.commande",
       "mappedBy": "user"
+    },
+    "firstname": {
+      "type": "string"
+    },
+    "lastname": {
+      "type": "string"
     }
   }
 }
