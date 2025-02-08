@@ -410,7 +410,7 @@ export interface ApiCommandeCommande extends Struct.CollectionTypeSchema {
     singularName: 'commande';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
@@ -574,7 +574,7 @@ export interface ApiTicketTicket extends Struct.CollectionTypeSchema {
     singularName: 'ticket';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     commande: Schema.Attribute.Relation<'manyToOne', 'api::commande.commande'>;
