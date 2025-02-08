@@ -1,0 +1,5 @@
+/**
+ * manageCommand service
+ */
+
+export default () => ({});
