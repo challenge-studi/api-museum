@@ -3,8 +3,6 @@
  */
 import { Context } from "koa";
 
-const { validate } = strapi.contentAPI;
-
 type QuantityPerPrice = {
   price: number;
   quantity: number;
@@ -27,8 +25,8 @@ function isValidData(data: unknown): data is QuantityPerPrice[] {
         item.quantity > 0 &&
 
         // vérification attributes exposition
-        "exposition" in item && 
-        typeof item.exposition === "number" 
+        "exposition" in item &&
+        typeof item.exposition === "number"
 
       ) return true;
       else return false
@@ -48,24 +46,29 @@ export default {
 
       // vérification du type et traitement 
       if (isValidData(data)) {
-        // Data valide, on travaille
+        // vérification des relations : 
+        const listPrice = await strapi.documents("api::price.price").findMany();
+        const listExposition = await strapi.documents("api::exposition.exposition").findMany();
+
+        for (let choice of data) {
+          if (!listExposition.some(expo => expo.id === choice.exposition))
+             return ctx.badRequest("un ID exposition donnée n'existe pas");
+          if (!listPrice.some(price => price.id === choice.price)) 
+            return ctx.badRequest("Un ID Price donné n'existe pas");
+        }
 
         newCommand = await strapi.documents("api::commande.commande").create({
           data: {
-            user: ctx.state.user.id, // hardcoder pour lest test
+            user: ctx.state.user.id, 
             etat: "DRAFT",
           }
         });
-
-        console.log("la commande : " , newCommand); 
-
 
         // pour chaque billet voulu, on genere un ticket
         for (let price of data) {
           for (let i = 0; i < price.quantity; i++) {
 
-            console.log("Génération d'un billet");
-            strapi.documents("api::ticket.ticket").create({
+            await strapi.documents("api::ticket.ticket").create({
               data: {
                 price: price.price,
                 exposition: price.exposition,
