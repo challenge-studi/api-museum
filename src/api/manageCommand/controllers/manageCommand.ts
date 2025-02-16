@@ -93,70 +93,78 @@ export default {
 
   sessionPay: async (ctx: Context) => {
 
-    const dataClient = ctx.request.body;
-    if (!isDataValidCommandNumber(dataClient)) {
-      console.log("Donné recu invalide");
-      return ctx.badRequest("Data Invalide");
+    try {
+
+      const dataClient = ctx.request.body;
+      if (!isDataValidCommandNumber(dataClient)) {
+        console.log("Donné recu invalide");
+        return ctx.badRequest("Data Invalide");
+      }
+  
+      console.log("Donnée recu valide");
+      console.log(dataClient.command);
+  
+      const command = await strapi.documents("api::commande.commande").findOne({
+        documentId: dataClient.command,
+        populate: {
+          tickets: {
+            populate: "*"
+          }
+        }
+      });
+  
+      console.log(command);
+  
+      // Calcul du price 
+      const totalPrice = command.tickets.reduce((acu, value) => acu + value.price.price, 0);
+  
+      // update the price of command
+      await strapi.documents("api::commande.commande").update({
+        documentId: command.documentId, 
+        data: {
+          total_price: totalPrice
+        }
+      })
+  
+  
+      // création session Stripe
+      const stripe = new Stripe(env.STRIPE_PRIVATE); 
+  
+      const session =  await stripe.checkout.sessions.create({
+        ui_mode: 'embedded', 
+        return_url: `${env.FRONT_URL}/return-stripe`, 
+        mode: 'payment', 
+        line_items: [
+          {
+            price_data: {
+              unit_amount: totalPrice * 100, 
+              currency: 'EUR', 
+              product_data: {
+                name: `Commande : ${command.documentId}`, 
+                metadata: {
+                  documentId: command.documentId
+                },
+              }
+  
+            },
+            quantity: 1
+          }
+        ], 
+        metadata: {
+          documentId: command.documentId
+        }
+        
+      })
+  
+      ctx.body = {
+        clientSecret: session.client_secret
+      };
+
+    }
+    catch(err) {
+      ctx.body = err; 
     }
 
-    console.log("Donnée recu valide");
-    console.log(dataClient.command);
-
-    const command = await strapi.documents("api::commande.commande").findOne({
-      documentId: dataClient.command,
-      populate: {
-        tickets: {
-          populate: "*"
-        }
-      }
-    });
-
-    console.log(command);
-
-    // Calcul du price 
-    const totalPrice = command.tickets.reduce((acu, value) => acu + value.price.price, 0);
-
-    // update the price of command
-    await strapi.documents("api::commande.commande").update({
-      documentId: command.documentId, 
-      data: {
-        total_price: totalPrice
-      }
-    })
-
-
-    // création session Stripe
-    const stripe = new Stripe(env.STRIPE_PRIVATE); 
-
-    const session =  await stripe.checkout.sessions.create({
-      ui_mode: 'embedded', 
-      return_url: `${env.FRONT_URL}/return-stripe`, 
-      mode: 'payment', 
-      line_items: [
-        {
-          price_data: {
-            unit_amount: totalPrice * 100, 
-            currency: 'EUR', 
-            product_data: {
-              name: `Commande : ${command.documentId}`, 
-              metadata: {
-                documentId: command.documentId
-              },
-            }
-
-          },
-          quantity: 1
-        }
-      ], 
-      metadata: {
-        documentId: command.documentId
-      }
-      
-    })
-
-    ctx.body = {
-      clientSecret: session.client_secret
-    };
   }
 };
 
